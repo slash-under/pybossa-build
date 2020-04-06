@@ -26,7 +26,7 @@ RUN apt-get install -y --no-install-recommends \
         python3 python3-dev python3-virtualenv \
         python3-setuptools python3-pip \
         libjpeg-dev swig \
-        dbus libdbus-1-dev libdbus-glib-1-dev \
+        dbus libxml2 libxml2-dev libdbus-1-dev libdbus-glib-1-dev \
         libsasl2-dev libldap2-dev libssl-dev \
         postgresql-client postgresql-server-dev-all libpq-dev python3-psycopg2 \
         redis-server nginx
