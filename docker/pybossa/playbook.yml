@@ -1,5 +1,5 @@
 ---
-# Installation steps for every Ubuntu 14.04
+# Installation steps for every Ubuntu 20.04
 - hosts: all
   vars:
     pybossa_user: "pybossa"
@@ -13,11 +13,11 @@
     redis_port: "6379"
     schedule_interval: "60"
   tasks:
-    - name: Check Ubuntu 14.04 running
+    - name: Check Ubuntu 20.04 running
       assert:
         that:
           - ansible_distribution == 'Ubuntu'
-          - ansible_distribution_release == 'trusty'
+          - ansible_distribution_release == 'focal'
 
     - name: Create Pybossa group
       group: name={{pybossa_user}}
@@ -48,47 +48,45 @@
     - name: update apt cache
       apt: update_cache=yes
 
+    - name: install sudo
+      apt: 
+        name:  sudo
+        state: latest
+
     - name: install git
-      apt: name=git-core state=latest
+      apt:
+        name:  git-core
+        state: latest
 
     - name: install Python
-      apt: name={{item}} state=latest
-      with_items:
-        - python
-        - python-dev
-        - python-virtualenv
-        - python-setuptools
-        - python-pip
+      apt:
+        name: ['python3', 'python3-dev', 'python3-virtualenv', 'python3-setuptools', 'python3-pip']
+        state: latest
 
     - name: install PyBossa build requirements
-      apt: name={{item}} state=latest
-      with_items:
-        - build-essential
-        - libjpeg-dev
-        - libssl-dev
-        - swig
-        - libffi-dev
-        - dbus
-        - libdbus-1-dev
-        - libdbus-glib-1-dev
+      apt:
+        name: ['build-essential', 'libjpeg-dev', 'libssl-dev', 'swig', 'libffi-dev', 'dbus', 'libdbus-1-dev', 'libdbus-glib-1-dev']
+        state: latest
 
     - name: install PostgreSQL client
-      apt: name={{item}} state=latest
-      with_items:
-        - postgresql-client
-        - postgresql-server-dev-all
-        - libpq-dev
-        - python-psycopg2
-
+      apt:
+        name: ['postgresql-client', 'postgresql-server-dev-all', 'libpq-dev', 'python3-psycopg2']
+        state: latest
+    
     - name: install Redis
-      apt: name=redis-server state=latest
+      apt:
+        name: redis-server
+        state: latest
 
     - name: Clone git repo
       become: true
       become_user: "{{pybossa_user}}"
-      git:  repo=https://github.com/Scifabric/pybossa.git
-            dest={{pybossa_path}} accept_hostkey=yes
-            remote=origin version={{PYBOSSA_COMMIT}}
+      git: 
+        repo: https://github.com/Scifabric/pybossa.git
+        dest: "{{pybossa_path}}"
+        accept_hostkey: yes
+        remote: origin 
+        version: "{{PYBOSSA_COMMIT}}"
 
 # Changed to contrib/redis-supervisor/redis.conf nodaemon version
     - name: copy Redis no daemon config
@@ -105,27 +103,51 @@
     - name: "upgrade pip itself"
       become: true
       become_user: "{{pybossa_user}}"
-      pip: name=pip state=latest chdir={{pybossa_path}} virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
+      pip:
+        name: pip
+        state: latest
+        chdir: "{{pybossa_path}}"
+        virtualenv: "{{virtualenv_path}}"
+        virtualenv_site_packages: yes
 
     - name: "install PyBossa virtualenv packages, can take some time..."
       become: true
       become_user: "{{pybossa_user}}"
-      pip: chdir={{pybossa_path}} requirements={{pybossa_path}}/requirements.txt virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
+      pip: 
+        chdir: "{{pybossa_path}}"
+        requirements: "{{pybossa_path}}/requirements.txt"
+        virtualenv: "{{virtualenv_path}}"
+        virtualenv_site_packages: yes
 
     - name: "Install uwsgi"
       become: true
       become_user: "{{pybossa_user}}"
-      pip: name=uwsgi state=latest chdir={{pybossa_path}} virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
+      pip:
+        name: uwsgi
+        state: latest
+        chdir: "{{pybossa_path}}"
+        virtualenv: "{{virtualenv_path}}"
+        virtualenv_site_packages: yes
 
     - name: "Install uwsgitop"
       become: true
       become_user: "{{pybossa_user}}"
-      pip: name=uwsgitop state=latest chdir={{pybossa_path}} virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
+      pip:
+        name: uwsgitop
+        state: latest
+        chdir: "{{pybossa_path}}"
+        virtualenv: "{{virtualenv_path}}"
+        virtualenv_site_packages: yes
 
     - name: "pip install dj_database_url for use by /ansible_build/reset_pybossa_db.py"
       become: true
       become_user: "{{pybossa_user}}"
-      pip: name=dj-database-url state=latest chdir={{pybossa_path}} virtualenv={{virtualenv_path}} virtualenv_site_packages=yes
+      pip:
+        name: dj-database-url
+        state: latest
+        chdir: "{{pybossa_path}}"
+        virtualenv: "{{virtualenv_path}}"
+        virtualenv_site_packages: yes
 
 # Note: Database connection is not known until deployment of image.
 # Database and other secret settings will be in environment variables.

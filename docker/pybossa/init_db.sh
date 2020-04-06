@@ -2,4 +2,4 @@
 set -e
 cd /home/pybossa/repo
 . /home/pybossa/env/bin/activate
-python cli.py db_create
+python3 cli.py db_create

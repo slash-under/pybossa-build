@@ -5,16 +5,14 @@ services:
       context: ./docker
       dockerfile: ./Dockerfile
       args:
-#       - PYBOSSA_COMMIT="${PYBOSSA_COMMIT:-master}"
-        # c2d7630 is Feb 7 2018 commit with JSONB API, two commits after v2.9.0
-        - PYBOSSA_COMMIT="c2d7630"
+       - PYBOSSA_COMMIT="${PYBOSSA_COMMIT:-master}"
     environment:
       - PYBOSSA_SECRET=test-only-y8y2i4ISpfwEMhLjUfXH9e5qA8qJkKA31tuLakvy
       - PYBOSSA_SESSION_SECRET=test-only-y8y2i4ISpfwEMhLjUfXH9e5qA8qJkKA31tuLakvy
       - PYBOSSA_DATABASE_URL=postgresql://dfuser:test-only-RDkWWAG9jXMAFO8pXu6K@pybossa-db/dforce
       - PYBOSSA_ITSDANGEROUS_SECRET=test-only-2R1ucOk8KxEeh5SCaXcWPt4oDf2sHQvpiyHAPoyX
-      - PYBOSSA_BRAND=Deciding Force
-      - PYBOSSA_TITLE=Deciding Force
+      - PYBOSSA_BRAND=Helpful Engineering
+      - PYBOSSA_TITLE=Helpful Engineering
       - PYBOSSA_LOGO=default_logo.svg
     depends_on:
       - pybossa-db
@@ -22,8 +20,8 @@ services:
       - "8000:80"
 
   pybossa-db:
-    image: postgres:9.6
+    image: postgres
     environment:
       - POSTGRES_USER=dfuser
-      - POSTGRES_PASSWORD=test-only-RDkWWAG9jXMAFO8pXu6K
+      - POSTGRES_PASSWORD=test-only-Spoonful78squinted37supra
       - POSTGRES_DB=dforce

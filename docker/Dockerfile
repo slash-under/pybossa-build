@@ -1,4 +1,4 @@
-FROM ubuntu:14.04.5
+FROM ubuntu:20.04
 # Note ARGs set defaults only. They can be overridden by command line --build-args
 ARG PYBOSSA_COMMIT=master
 RUN echo "Building Pybossa from this branch/tag: ${PYBOSSA_COMMIT}"
@@ -23,20 +23,23 @@ RUN apt-get install -y --no-install-recommends \
 # Install the packages that Pybossa will want so they are
 # cached by Docker and not reinstalled by Ansible each time
 RUN apt-get install -y --no-install-recommends \
-        python python-dev python-virtualenv \
-        python-setuptools python-pip \
+        python3 python3-dev python3-virtualenv \
+        python3-setuptools python3-pip \
         libjpeg-dev swig \
         dbus libdbus-1-dev libdbus-glib-1-dev \
         libsasl2-dev libldap2-dev libssl-dev \
-        postgresql-client postgresql-server-dev-all libpq-dev python-psycopg2 \
+        postgresql-client postgresql-server-dev-all libpq-dev python3-psycopg2 \
         redis-server nginx
 
 # Monitoring/ops utility
 RUN apt-get install -y --no-install-recommends \
         htop
 
-RUN apt-add-repository ppa:ansible/ansible
-RUN apt-get update -q && apt-get install -y --no-install-recommends \
+#RUN apt-add-repository ppa:ansible/ansible
+#RUN apt-get update -q && apt-get install -y --no-install-recommends \
+#        ansible
+
+RUN apt-get install -y --no-install-recommends \
         ansible
 
 ENV PYBOSSA_SETTINGS /home/pybossa/repo/settings_from_env.py
